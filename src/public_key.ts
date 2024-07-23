@@ -82,6 +82,7 @@ export class PublicKey extends PemData<SubjectPublicKeyInfo> {
       // So, we need to convert it to RSA-PKCS1
       raw = convertSpkiToRsaPkcs1(asnSpki, raw);
     } else if(asnSpki.algorithm.algorithm == '1.3.101.112') {
+      // Ed25519 algorithm support for web browsers. Combine with @solana/webcrypto-ed25519-polyfill.
       // https://github.com/WICG/webcrypto-secure-curves/issues/22
       let key = raw.slice(raw.byteLength-32);
       return crypto.subtle.importKey('raw', key, 'Ed25519', true, ['verify']);
