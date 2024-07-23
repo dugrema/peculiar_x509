@@ -81,6 +81,10 @@ export class PublicKey extends PemData<SubjectPublicKeyInfo> {
       // WebCrypto in browsers does not support RSA-PSS algorithm for public keys
       // So, we need to convert it to RSA-PKCS1
       raw = convertSpkiToRsaPkcs1(asnSpki, raw);
+    } else if(asnSpki.algorithm.algorithm == '1.3.101.112') {
+      // https://github.com/WICG/webcrypto-secure-curves/issues/22
+      let key = raw.slice(raw.byteLength-32);
+      return crypto.subtle.importKey('raw', key, 'Ed25519', true, ['verify']);
     }
 
     // create a public key
